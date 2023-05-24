@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "sky-calendar"
+version = "0.1.0"
+description = ""
+authors = ["Manuilov Daniil <manuilovdaniil@yandex.ru>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "sky_calendar"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Django = "^4.2.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
