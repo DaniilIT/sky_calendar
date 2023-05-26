@@ -1,16 +1,39 @@
 version: "3.9"
 
 services:
+  front:
+    # https://github.com/skypro-008/todo-list-frontend
+    image: sermalenk/skypro-front:lesson-34
+    ports:
+      - 80:80
+    restart: always
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: .
+      dockerfile: ./src/Dockerfile
+    # image: <>/<>:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    ports:
+      - "8000:8000"
+    restart: always
+    environment:
+      - POSTGRES_HOST=postgres
+    volumes:
+      # - ./docker.env:/app/.env
+      - ./src/:/opt/todolist
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   postgres:
     image: postgres:15.3-alpine
-    networks:
-      - backend_nw
     ports:
       - "5432:5432"
     restart: always
     env_file:
-      - .env
+      - ./src/.env
     volumes:
       - pg_data_todolist:/var/lib/postgresql/data
     healthcheck:
