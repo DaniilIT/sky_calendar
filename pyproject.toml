@@ -15,7 +15,14 @@ psycopg2 = "^2.9.6"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.1"
+pre-commit = "^3.3.2"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+py_version = 311
+profile = "django"
+known_first_party = ["todolist", "core"]
+skip = ["*/migrations/*"]
