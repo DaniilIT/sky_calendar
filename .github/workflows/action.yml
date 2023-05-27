@@ -55,7 +55,7 @@ jobs:
           password: ${{ secrets.DEPLOY_PASSWORD }}
           source: "deploy/*"
           target: todolist
-          strip_component: 1
+          strip_components: 1
       - name: Run compose
         uses: appleboy/ssh-action@master
         with:
