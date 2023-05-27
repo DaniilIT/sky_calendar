@@ -47,6 +47,22 @@ jobs:
           envsubst '$DOCKERHUB_USERNAME,$DOCKERHUB_REPO' < deploy/docker-compose_ci.yaml > deploy/docker-compose.yaml
           rm deploy/docker-compose_ci.yaml
           rm deploy/vault.env
+
+      # Собрать статику
+      - name: Set ip Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Collect static
+        run: |
+          set -a; source example.env; set +a;
+          ./src/manage.py collectstatic -c --no-input
+          mv ./src/static ./deploy/
+
       - name: Copy on server
         uses: appleboy/scp-action@master
         with:
@@ -64,5 +80,14 @@ jobs:
           password: ${{ secrets.DEPLOY_PASSWORD }}
           script: |
             cd todolist
+            docker-compose down
             docker-compose pull
             docker-compose up -d
+      - name: Cleanup images
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ vars.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASSWORD }}
+          script: |
+            docker system prune -af
