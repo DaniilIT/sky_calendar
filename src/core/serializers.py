@@ -20,8 +20,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name',
-                  'email', 'password', 'password_repeat')
+        fields = ('id', 'username', 'first_name', 'last_name', 'email',
+                  'password', 'password_repeat')
 
     def validate(self, attrs: dict):
         if attrs['password'] != attrs['password_repeat']:
@@ -50,3 +50,9 @@ class LoginSerializer(serializers.ModelSerializer):
         if not user:
             raise exceptions.AuthenticationFailed
         return user
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'first_name', 'last_name', 'email')
