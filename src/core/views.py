@@ -39,3 +39,12 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_destroy(self, instance: User):
         auth.logout(self.request)
+
+
+class UpdatePasswordView(generics.UpdateAPIView):
+    # queryset = User.objects.all()
+    serializer_class = serializers.UpdatePasswordSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self) -> User:
+        return self.request.user

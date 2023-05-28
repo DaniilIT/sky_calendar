@@ -23,13 +23,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
                   'password', 'password_repeat')
 
-    def validate(self, attrs: dict):
+    def validate(self, attrs: dict) -> dict:
         if attrs['password'] != attrs['password_repeat']:
             raise exceptions.ValidationError('Passwords do not match')
         del attrs['password_repeat']
         return attrs
 
-    def create(self, validated_data: dict):
+    def create(self, validated_data: dict) -> User:
         validated_data['password'] = make_password(validated_data['password'])
         return super().create(validated_data)
 
@@ -42,7 +42,7 @@ class LoginSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'password')
 
-    def create(self, validated_data: dict):
+    def create(self, validated_data: dict) -> User:
         user = authenticate(
             username=validated_data['username'],
             password=validated_data['password']
@@ -56,3 +56,27 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email')
+
+
+class UpdatePasswordSerializer(serializers.Serializer):
+    user = serializers.HiddenField(required=False, default=serializers.CurrentUserDefault())
+    old_password = PasswordField(required=True)
+    new_password = PasswordField(required=True)
+
+    def create(self, validated_data: dict) -> User:
+        raise NotImplementedError
+
+    def validate(self, attrs: dict) -> dict:
+        user = attrs['user']
+        if not user:
+            raise exceptions.NotAuthenticated
+        if not user.check_password(attrs['old_password']):
+            raise exceptions.ValidationError(
+                {'old_password': 'password field is incorrect'}
+            )
+        return attrs
+
+    def update(self, instance: User, validated_data: dict) -> User:
+        instance.set_password(validated_data['new_password'])
+        instance.save(update_fields=('password',))
+        return instance
