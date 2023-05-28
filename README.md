@@ -32,19 +32,15 @@
 pip install -r requirements.txt
 ```
 
-В папке `src/` создайте файл `.env` и в нем определите следующие переменные окружения:
-```
-SECRET_KEY=<Секретный ключ для Django>
-DEBUG=<True/False>
-POSTGRES_USER=<...>
-POSTGRES_PASSWORD=<...>
-POSTGRES_DB=<...>
-POSTGRES_HOST=127.0.0.1
-```
+В корневой папке создайте файл `.env` и заполните его по примеру `example.env`.
 
 Дальше два варианта:
 
 #### 1. PostgreSQL уже настроен и необходимо запустить API
+
+```sh
+docker-compose up -d postgres
+```
 
 Накатите миграции:
 ```sh
