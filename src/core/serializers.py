@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import exceptions, serializers
@@ -31,3 +32,21 @@ class UserCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data: dict):
         validated_data['password'] = make_password(validated_data['password'])
         return super().create(validated_data)
+
+
+class LoginSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(required=True)
+    password = PasswordField(required=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+
+    def create(self, validated_data: dict):
+        user = authenticate(
+            username=validated_data['username'],
+            password=validated_data['password']
+        )
+        if not user:
+            raise exceptions.AuthenticationFailed
+        return user
