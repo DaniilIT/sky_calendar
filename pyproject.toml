@@ -27,5 +27,5 @@ build-backend = "poetry.core.masonry.api"
 [tool.isort]
 py_version = 311
 profile = "django"
-known_first_party = ["todolist", "core"]
+known_first_party = ["todolist", "core", "goals"]
 skip = ["*/migrations/*"]
