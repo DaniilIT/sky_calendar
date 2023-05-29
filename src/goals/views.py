@@ -27,3 +27,19 @@ class GoalCategoryListView(generics.ListAPIView):
         return self.model.objects.filter(
             user=self.request.user, is_deleted=False
         )
+
+
+class GoalCategoryView(generics.RetrieveUpdateDestroyAPIView):
+    model = GoalCategory
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = serializers.GoalCategorySerializer
+
+    def get_queryset(self):
+        return self.model.objects.filter(
+            user=self.request.user, is_deleted=False
+        )
+
+    def perform_destroy(self, instance: GoalCategory):
+        instance.is_deleted = True
+        instance.save(update_fields=('is_deleted',))
+        return instance
