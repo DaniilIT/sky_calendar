@@ -40,7 +40,9 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'password')
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'password')
+        read_only_fields = ('id', 'first_name', 'last_name', 'email')
+        # fields = ('username', 'password')
 
     def create(self, validated_data: dict) -> User:
         user = authenticate(

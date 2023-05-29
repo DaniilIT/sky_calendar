@@ -6,12 +6,10 @@ from core.models import User
 
 
 class UserCreateView(generics.CreateAPIView):
-    # queryset = User.objects.all()
     serializer_class = serializers.UserCreateSerializer
 
 
 # class LoginView(generics.GenericAPIView):
-#     # queryset = User.objects.all()
 #     serializer_class = serializers.LoginSerializer
 #
 #     def post(self, request, *args, **kwargs):
@@ -22,7 +20,6 @@ class UserCreateView(generics.CreateAPIView):
 
 
 class LoginView(generics.CreateAPIView):
-    # queryset = User.objects.all()
     serializer_class = serializers.LoginSerializer
 
     def perform_create(self, serializer):
@@ -30,19 +27,17 @@ class LoginView(generics.CreateAPIView):
 
 
 class ProfileView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
     serializer_class = serializers.ProfileSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self) -> User:
-        return self.request.user
+        return self.request.user  # вместо queryset
 
     def perform_destroy(self, instance: User):
         auth.logout(self.request)
 
 
 class UpdatePasswordView(generics.UpdateAPIView):
-    # queryset = User.objects.all()
     serializer_class = serializers.UpdatePasswordSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
