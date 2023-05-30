@@ -1,10 +1,11 @@
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 
 from core.serializers import ProfileSerializer
-from goals.models import GoalCategory
+from goals.models import Goal, GoalCategory
 
 
-class GoalCreateSerializer(serializers.ModelSerializer):
+class GoalCategoryCreateSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -20,3 +21,40 @@ class GoalCategorySerializer(serializers.ModelSerializer):
         model = GoalCategory
         fields = '__all__'
         read_only_fields = ('id', 'created', 'updated', 'user')
+
+
+class GoalCreateSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=GoalCategory.objects.filter(is_deleted=False)
+    )
+
+    class Meta:
+        model = Goal
+        read_only_fields = ('id', 'created', 'updated', 'user')
+        fields = '__all__'
+
+    def validate_category(self, value: GoalCategory):
+        if value.is_deleted:
+            raise serializers.ValidationError('not allowed category')
+        if value.user != self.context['request'].user:
+            raise PermissionDenied
+        return value
+
+
+class GoalSerializer(serializers.ModelSerializer):
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=GoalCategory.objects.filter(is_deleted=False)
+    )
+
+    class Meta:
+        model = GoalCategory
+        fields = '__all__'
+        read_only_fields = ('id', 'created', 'updated', 'user')
+
+    def validate_category(self, value: GoalCategory):
+        if value.is_deleted:
+            raise serializers.ValidationError('not allowed category')
+        if value.user != self.context['request'].user:
+            raise PermissionDenied
+        return value

@@ -22,11 +22,45 @@ class GoalCategory(BaseModel):
     is_deleted = models.BooleanField('Удалена', default=False)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             verbose_name='Автор')
+                             verbose_name='Автор', related_name='categories')
 
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
+
+    def __str__(self):
+        return self.title
+
+
+class Goal(BaseModel):
+    class Status(models.IntegerChoices):
+        to_do = 1, 'К выполнению'
+        in_progress = 2, 'В процессе'
+        done = 3, 'Выполнено'
+        archived = 4, 'Архив'
+
+    class Priority(models.IntegerChoices):
+        low = 1, 'Низкий'
+        medium = 2, 'Средний'
+        high = 3, 'Высокий'
+        critical = 4, 'Критический'
+
+    title = models.CharField('Название', max_length=255)
+    description = models.TextField('Описание', blank=True)
+    due_date = models.DateTimeField('Дата выполнения', null=True, blank=True)
+    status = models.PositiveSmallIntegerField('Статус', choices=Status.choices,
+                                              default=Status.to_do)
+    priority = models.PositiveSmallIntegerField('Приоритет', choices=Priority.choices,
+                                                default=Priority.medium)
+
+    category = models.ForeignKey(GoalCategory, on_delete=models.SET_NULL, null=True,
+                                 verbose_name='Категория', related_name='goals')
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             verbose_name='Автор', related_name='goals')
+
+    class Meta:
+        verbose_name = 'Цель'
+        verbose_name_plural = 'Цели'
 
     def __str__(self):
         return self.title
