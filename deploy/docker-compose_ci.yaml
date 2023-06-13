@@ -30,7 +30,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - pg_data_todolist:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
     healthcheck:
       test: pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
       interval: 3s
@@ -38,5 +38,10 @@ services:
       retries: 5
 
 
+networks:
+  default:
+    name: todolist_network
+
 volumes:
-  pg_data_todolist:
+  pg_data:
+    name: todolist_pg_data

@@ -15,8 +15,9 @@ class UserCreateView(generics.CreateAPIView):
 #     def post(self, request, *args, **kwargs):
 #         serializer = self.get_serializer(data=request.data)
 #         serializer.is_valid(raise_exception=True)
-#         login(request=request, user=serializer.save())  # с использованием cookies
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         user=serializer.save()
+#         login(request=request, user=user)
+#         return Response(ProfileSerializer(user).data)
 
 
 class LoginView(generics.CreateAPIView):
