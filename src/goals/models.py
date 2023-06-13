@@ -38,14 +38,17 @@ class BoardParticipant(BaseModel):
     role = models.PositiveSmallIntegerField('Роль', choices=Role.choices, default=Role.owner)
 
     board = models.ForeignKey(Board, on_delete=models.PROTECT,
-                              verbose_name='Доска', related_name='participant')
+                              verbose_name='Доска', related_name='participants')
     user = models.ForeignKey(User, on_delete=models.PROTECT,
-                             verbose_name='Пользователь', related_name='participant')
+                             verbose_name='Пользователь', related_name='participants')
 
     class Meta:
         unique_together = ('board', 'user')
         verbose_name = 'Участник'
         verbose_name_plural = 'Участники'
+
+    def __str__(self):
+        return f'{self.user} ({self.role}) - {self.board}'
 
 
 class GoalCategory(BaseModel):
