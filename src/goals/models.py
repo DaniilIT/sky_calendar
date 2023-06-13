@@ -17,12 +17,49 @@ class BaseModel(models.Model):
     #     return super().save(*args, **kwargs)
 
 
+class Board(BaseModel):
+    title = models.CharField('Название', max_length=255)
+    is_deleted = models.BooleanField('Удалена', default=False)
+
+    class Meta:
+        verbose_name = 'Доска'
+        verbose_name_plural = 'Доски'
+
+    def __str__(self):
+        return self.title
+
+
+class BoardParticipant(BaseModel):
+    class Role(models.IntegerChoices):
+        owner = 1, 'Владелец'
+        writer = 2, 'Редактор'
+        reader = 3, 'Читатель'
+
+    role = models.PositiveSmallIntegerField('Роль', choices=Role.choices, default=Role.owner)
+
+    board = models.ForeignKey(Board, on_delete=models.PROTECT,
+                              verbose_name='Доска', related_name='participants')
+    user = models.ForeignKey(User, on_delete=models.PROTECT,
+                             verbose_name='Пользователь', related_name='participants')
+
+    class Meta:
+        unique_together = ('board', 'user')
+        verbose_name = 'Участник'
+        verbose_name_plural = 'Участники'
+
+    def __str__(self):
+        return f'{self.user} ({self.role}) - {self.board}'
+
+
 class GoalCategory(BaseModel):
     title = models.CharField('Название', max_length=255)
     is_deleted = models.BooleanField('Удалена', default=False)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
+    user = models.ForeignKey(User, on_delete=models.PROTECT,  # CASCADE
                              verbose_name='Автор', related_name='categories')
+
+    board = models.ForeignKey(Board, on_delete=models.PROTECT,
+                              verbose_name='Доска', related_name='categories')
 
     class Meta:
         verbose_name = 'Категория'
