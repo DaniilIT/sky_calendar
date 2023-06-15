@@ -3,7 +3,7 @@ version: "3.9"
 services:
   frontend:
     # https://github.com/skypro-008/todo-list-frontend
-    image: sermalenk/skypro-front:lesson-37
+    image: sermalenk/skypro-front:lesson-38
     ports:
       - 80:80
     restart: always
@@ -26,6 +26,20 @@ services:
       - POSTGRES_HOST=postgres
     volumes:
       - ./src/:/opt/todolist
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  tg_bot:
+    build:
+      context: .
+      dockerfile: ./src/Dockerfile
+    restart: on-failure
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=postgres
+    command: ./manage.py runbot
     depends_on:
       postgres:
         condition: service_healthy
