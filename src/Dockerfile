@@ -26,8 +26,8 @@ USER api
 
 ENTRYPOINT ["bash", "entrypoint.sh"]
 
-CMD ["./manage.py", "runserver", "0.0.0.0:8000"]
-# CMD ["gunicorn", "todolist/wsgi", "-w 4", "-b 0.0.0.0:8000"]
+# CMD ["./manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["gunicorn", "todolist/wsgi", "-w", "2", "-b", "0.0.0.0:8000"]
 
 # документирование для 'docker inspect'
 EXPOSE 8000

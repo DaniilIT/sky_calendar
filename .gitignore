@@ -26,6 +26,9 @@ ENV/
 # Logs
 *.log
 
+# Tests
+.pytest_cache/
+
 # Poetry
 poetry.lock
 

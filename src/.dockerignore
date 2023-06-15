@@ -1,36 +1,10 @@
-# Byte-compiled
-__pycache__/
+# ignore all
+**
 
-# File created by Mac OS X
-.DS_Store
-
-# PyCharm
-.idea/
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-
-# Data
-*.csv
-*.json
-*.pkl
-*.sqlite3
-*.db
-
-# Logs
-*.log
-
-# Poetry
-poetry.lock
-
-# tests
-.pytest_cache/
-pytest.ini
-tests/
-
-# Project
-README.md
+# expect
+!bot/**
+!core/**
+!goals/**
+!todolist/**
+!entrypoint.sh
+!manage.py

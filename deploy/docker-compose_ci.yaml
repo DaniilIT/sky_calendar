@@ -2,8 +2,8 @@ version: "3.9"
 
 services:
   frontend:
-    # https://github.com/skypro-008/todo-list-frontend
     image: sermalenk/skypro-front:lesson-38
+    container_name: todolist_frontend
     ports:
       - 80:80
     restart: always
@@ -15,18 +15,20 @@ services:
 
   api:
     image: ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPO}:latest
-    restart: on-failure
+    container_name: todolist_api
     env_file:
       - ./.env
+    restart: on-failure
     depends_on:
       postgres:
         condition: service_healthy
 
   tg_bot:
     image: ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPO}:latest
-    restart: on-failure
+    container_name: todolist_tg_bot
     env_file:
       - ./.env
+    restart: on-failure
     command: ./manage.py runbot
     depends_on:
       postgres:
@@ -34,18 +36,19 @@ services:
 
   postgres:
     image: postgres:15.3-alpine
-    restart: on-failure
+    container_name: todolist_pg
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+    restart: on-failure
     volumes:
       - pg_data:/var/lib/postgresql/data
     healthcheck:
       test: pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
       interval: 3s
       timeout: 3s
-      retries: 5
+      retries: 10
 
 
 networks:
