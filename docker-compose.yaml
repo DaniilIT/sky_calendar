@@ -30,6 +30,20 @@ services:
       postgres:
         condition: service_healthy
 
+  tg_bot:
+    build:
+      context: .
+      dockerfile: ./src/Dockerfile
+    restart: on-failure
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=postgres
+    command: ./manage.py runbot
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   postgres:
     image: postgres:15.3-alpine
     ports:

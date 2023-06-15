@@ -22,6 +22,16 @@ services:
       postgres:
         condition: service_healthy
 
+  tg_bot:
+    image: ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPO}:latest
+    restart: on-failure
+    env_file:
+      - ./.env
+    command: ./manage.py runbot
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   postgres:
     image: postgres:15.3-alpine
     restart: on-failure
