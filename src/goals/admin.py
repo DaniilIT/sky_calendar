@@ -3,15 +3,26 @@ from django.contrib import admin
 from goals.models import Board, Goal, GoalCategory, GoalComment
 
 
-@admin.register(GoalCategory)
-class GoalCategoryAdmin(admin.ModelAdmin):
-    list_display = ('title', 'user', 'is_deleted')
+@admin.register(Board)
+class BoardAdmin(admin.ModelAdmin):
+    list_display = ('title', 'is_deleted')
     list_display_links = ('title',)
     list_editable = ('is_deleted',)
-    search_fields = ('title',)
+    search_fields = ('title', 'participants__user__username')
     list_filter = ('is_deleted',)
 
-    raw_id_fields = ('user',)
+    readonly_fields = ('created', 'updated')
+
+
+@admin.register(GoalCategory)
+class GoalCategoryAdmin(admin.ModelAdmin):
+    list_display = ('title', 'user', 'board', 'is_deleted')
+    list_display_links = ('title',)
+    list_editable = ('is_deleted',)
+    search_fields = ('title', 'user__username')
+    list_filter = ('is_deleted',)
+
+    raw_id_fields = ('user', 'board')
     readonly_fields = ('created', 'updated')
 
 
@@ -34,12 +45,4 @@ class GoalCommentAdmin(admin.ModelAdmin):
     search_fields = ('text',)
 
     raw_id_fields = ('user', 'goal')
-    readonly_fields = ('created', 'updated')
-
-
-@admin.register(Board)
-class BoardAdmin(admin.ModelAdmin):
-    list_display = ('title', 'is_deleted')
-    search_fields = ('title', 'participants__user__username')
-    list_filter = ('is_deleted',)
     readonly_fields = ('created', 'updated')

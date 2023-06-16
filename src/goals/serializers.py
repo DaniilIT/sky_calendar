@@ -40,7 +40,8 @@ class BoardParticipantsSerializer(serializers.ModelSerializer):
 
 class BoardSerializer(serializers.ModelSerializer):
     participants = BoardParticipantsSerializer(many=True)
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    # user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Board
@@ -48,13 +49,13 @@ class BoardSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created', 'updated')
 
     def update(self, instance, validated_data):
-        owner = validated_data.pop('user')
+        # owner = validated_data.pop('user')
 
         with transaction.atomic():
             if validated_data.get('participants'):
                 new_participants = validated_data.pop('participants')
                 new_by_id = {part['user'].id: part for part in new_participants}
-                old_participants = instance.participants.exclude(user=owner)
+                old_participants = instance.participants.exclude(user=self.context['request'].user)  # owner
 
                 for old_participant in old_participants:
                     if old_participant.user_id not in new_by_id:
@@ -102,9 +103,9 @@ class GoalCategoryCreateSerializer(serializers.ModelSerializer):
         if value.is_deleted:
             raise serializers.ValidationError('Not allowed to delete category')
         if not BoardParticipant.objects.filter(
-            board=value,
-            role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer],
-            user=self.context['request'].user
+                board=value,
+                role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer],
+                user=self.context['request'].user
         ).exists():
             raise serializers.ValidationError('You must be owner pr writer')
         return value
@@ -139,9 +140,9 @@ class GoalCreateSerializer(serializers.ModelSerializer):
         if value.user != self.context['request'].user:
             raise PermissionDenied
         if not BoardParticipant.objects.filter(
-            board_id=value.board_id,
-            role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer],
-            user=self.context['request'].user
+                board_id=value.board_id,
+                role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer],
+                user=self.context['request'].user
         ).exists():
             raise PermissionDenied
         return value

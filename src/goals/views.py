@@ -17,6 +17,10 @@ class BoardCreateView(generics.CreateAPIView):
     permissions = (IsAuthenticated,)
     serializer_class = serializers.BoardCreateSerializer
 
+    # def perform_create(self, serializer):
+    #     BoardParticipant.objects.create(user=self.request.user, board=serializer.save(),
+    #                                     role=BoardParticipant.Role.owner)
+
 
 class BoardListView(generics.ListAPIView):
     model = Board

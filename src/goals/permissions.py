@@ -13,8 +13,8 @@ from goals.models import (
 
 class BoardPermissions(permissions.BasePermission):
     def has_object_permission(self, request, view, obj: Board):
-        if not request.user.is_authenticated:
-            return False
+        # if not request.user.is_authenticated:
+        #     return False
         filters: dict = {'user': request.user, 'board': obj}
         if request.method not in permissions.SAFE_METHODS:
             filters['role'] = BoardParticipant.Role.owner
@@ -23,8 +23,8 @@ class BoardPermissions(permissions.BasePermission):
 
 class GoalCategoryPermissions(permissions.BasePermission):
     def has_object_permission(self, request, view, obj: GoalCategory):
-        if not request.user.is_authenticated:
-            return False
+        # if not request.user.is_authenticated:
+        #     return False
         filters: dict = {'user': request.user, 'board': obj.board}
         if request.method not in permissions.SAFE_METHODS:
             filters['role__in'] = [BoardParticipant.Role.owner, BoardParticipant.Role.writer]
@@ -33,8 +33,8 @@ class GoalCategoryPermissions(permissions.BasePermission):
 
 class GoalPermissions(permissions.BasePermission):
     def has_object_permission(self, request, view, obj: Goal):
-        if not request.user.is_authenticated:
-            return False
+        # if not request.user.is_authenticated:
+        #     return False
         filters: dict = {'user': request.user, 'board': obj.category.board}
         if request.method not in permissions.SAFE_METHODS:
             filters['role__in'] = [BoardParticipant.Role.owner, BoardParticipant.Role.writer]
