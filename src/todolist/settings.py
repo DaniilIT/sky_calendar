@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'core',
     'goals',
     'bot',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -126,13 +127,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'UTC'  # 'Europe/Moscow'
 
 USE_I18N = True
 
-USE_L10N = True
+# USE_L10N = True
 
 USE_TZ = True
 
@@ -171,13 +172,49 @@ TG_TOKEN = env.str('TG_TOKEN')
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'DEFAULT_FILTER_BACKEND': (
-        'django_filters.rest_framework.DjangoFilterBackend',
-    )
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'DEFAULT_FILTER_BACKEND': (
+    #     'django_filters.rest_framework.DjangoFilterBackend',
+    # ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'sky calendar',
+    'DESCRIPTION': 'Task Scheduler, allows you to work with goals '
+                   'and track progress on them',
+    'VERSION': '1.0',
 }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGGING = {
+    'disable_existing_loggers': False,
+    'version': 1,
+    'formatters': {
+        'console': {
+            'format': '%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(message)s',
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+        },
+        'null': {'class': 'logging.NullHandler'},
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        'django.server': {
+            'handlers': ['null'],
+        },
+    },
+}
