@@ -120,6 +120,10 @@ API состоит из трёх приложений:
 - goals: содержит доски, категории, цели и комментарии
 - bot: содержит телеграмм-бота
 
+Интерактивная документация swagger доступна по адресу: [http://127.0.0.1:8000/api/schema/swagger-ui/](http://127.0.0.1:8000/api/schema/swagger-ui/)
+
+<img src="github_images/swagger.png" alt="swagger" style="height: 480px;" />
+
 
 ## Цели проекта
 
