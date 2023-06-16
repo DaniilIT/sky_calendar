@@ -59,7 +59,7 @@ jobs:
           pip install -r requirements.txt
       - name: Collect static
         run: |
-          set -a; source example.env; set +a;
+          set -a; source .env.example; set +a;
           ./src/manage.py collectstatic -c --no-input
           mv ./src/static ./deploy/
 

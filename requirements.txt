@@ -1,0 +1,8 @@
+# for action
+Django==4.2.*
+django-environ==0.10.*
+psycopg2==2.9.*
+djangorestframework==3.14.*
+social-auth-app-django==5.2.*
+django-filter==23.*
+drf-spectacular==0.26.*

@@ -21,6 +21,8 @@ Dependencies указаны в файле pyproject.toml:
 * django-filter = "^23.2"
 * pydantic = "^1.10.9"
 * requests = "^2.31.0"
+* drf-spectacular = "^0.26.2"
+* gunicorn = "^20.1.0"
 
 Для работы драйвера "psycopg2" на MacOS должен быть установлен postgresql.
 
@@ -77,7 +79,7 @@ docker-compose up -d postgres
 Для запуска выполните команду:
 
 ```sh
-./src/manage.py test -v 2
+./manage.py test -v 2
 ```
 
 
